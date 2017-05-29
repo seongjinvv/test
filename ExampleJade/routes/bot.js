@@ -5,12 +5,6 @@ const Bot = require('../service/BotService');
 
 
 const checkUserKey = (req, res, next) => {
-  if(req == undefined){
-    res.status(500).send({ error: 'req is undefined' });
-  }
-  if(req.body == undefined){
-    res.status(500).send({ error: 'req.body is undefined' });
-  }
   if(req.body.user_key !== undefined){
     next();
   }else{
