@@ -1,19 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const message = require('../service/message');
-// const CronService = require('../service/CronService');
 const Bot = require('../service/BotService');
 
-//require('../databases/redis')(router); // redis
-/*
-const checkUserKey = (req, res, next) => {
-  if(req.body.user_key !== undefined){
-    next();
-  }else{
-    res.status(500).send({ error: "user_key is undefined"});
-  }
-};
-*/
 
 const checkUserKey = (req, res, next) => {
   if(req == undefined){
@@ -38,7 +27,7 @@ router.get('/keyboard', (req, res) => {
 
 
 //TODO : Create Customize Method
-// 메시지 통신
+// 메시지 통신 testtest
 router.post('/message', checkUserKey, (req, res) => {
   const _obj = {
     user_key: req.body.user_key,
