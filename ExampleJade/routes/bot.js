@@ -78,8 +78,6 @@ router.post('/message', checkUserKey, (req, res) => {
           }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
         }
       });
-    }else if((_obj.content).indexOf(message.buttons) != -1){
-
     }else{ //depth 2: 사용자 입력 text인 경우
       PolicyAgree.policyAgreeKeyboard(req, _obj.content, (err, result) => {
         if(!err) {

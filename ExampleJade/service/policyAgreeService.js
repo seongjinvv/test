@@ -21,7 +21,7 @@ PolicyAgree.policyAgreeKeyboard = (req, content, callback) => {
       callback(null, message.messageButtonsType(getPolicyAgreeEndMsg()));
     break;
     default:
-      if(regExp.test(content)){
+      if(regExp.test(content) && (9 < content.length && content.length < 12)){
         callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg1(), '약관 상세 보기(Link)', 'http://naver.com'));
 
       }else{
@@ -63,9 +63,11 @@ var getPolicyAgreeEndMsg = function(){
 
   testResult = "이벤트 참여 절차 : 개인정보 입력(오케이) → 서비스 약관 동의(오케이) → 개인정보 수집 동의(오케이)\r\n\r\n";
   testResult += "--------------\r\n\r\n";
-  testResult += '이벤트 참여가 완료되었습니다.';
-  testResult += '감사합니다.(꺄아)\r\n\r\n\r\n';
-  testResult += '당첨 결과 발표일 : 2017-06-30';
+  testResult += "이벤트 참여가 완료되었습니다. ";
+  testResult += "감사합니다.(꺄아)\r\n\r\n\r\n";
+  testResult += "당첨 결과 발표일 : 2017-06-30\r\n";
+  testResult += "--------------\r\n\r\n";
+  testResult += "초기 화면으로 돌아갑니다.";
 
   return testResult;
 };
