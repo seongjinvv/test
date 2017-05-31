@@ -5,7 +5,16 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+//Express middleware
+var static = require('serve-static')
+    , errorHandler =require('errorhandler');
+// 오류 핸들러 모듈 사용
+var expressErrorHandler = require('express-error-handler');
+// Session middleware
+var expressSession = require('express-session');
+
 const bot = require('./routes/bot');
+// express 객체 생성
 const app = express();
 
 // view engine setup
@@ -19,6 +28,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// session 설정
+app.use(expressSession({
+  secret: 'my key',
+  resave: true,
+  saveUninitialized: true
+}));
 
 // app.use('/', index);
 // app.use('/users', users);

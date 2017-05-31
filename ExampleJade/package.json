@@ -7,14 +7,18 @@
   },
   "dependencies": {
     "async": "^2.1.4",
-    "cheerio": "^0.22.0",
-    "request": "^2.79.0",
     "body-parser": "~1.17.1",
+    "cheerio": "^0.22.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
+    "errorhandler": "^1.5.0",
     "express": "~4.15.2",
+    "express-error-handler": "^1.1.0",
+    "express-session": "^1.15.3",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
-    "serve-favicon": "~2.4.2"
+    "request": "^2.79.0",
+    "serve-favicon": "~2.4.2",
+    "serve-static": "^1.12.3"
   }
 }
