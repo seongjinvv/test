@@ -3,30 +3,15 @@ const router = express.Router();
 const message = require('../service/message');
 const Bot = require('../service/botService');
 const PolicyAgree = require('../service/policyAgreeService');
+const Database = require('../service/database');
 
 // ===================================================== 디버깅용 코드
 //console.log("req.url :" + req.url);
 //console.log("req.body : " + JSON.stringify(req.body) );
 // ===================================================== 디버깅용 코드
-// mongoDB 설정
-var MongoClient = require('mongoDB').MongoClient;
-var database;
-function connectDB() {
-  //database 연결 정보
-  var databaseUrl = 'mongodb://localhost:27017/local';
-  //database 연결
-  MongoClient.connect(databaseUrl, function(err, db){
-    if (err) throw err;
-    console.log("DB에 연결 되었습니다.");
-    database = db;
-  })
-}
-// db연결
-connectDB();
-
-module.exports = database;
 
 
+/*
 // 사용자 인증 함수
 var authUser = function(database, req, callback){
   console.log('authUser 호출 됨');
@@ -48,13 +33,12 @@ var authUser = function(database, req, callback){
   })
 }
 
-const checkUserKey = (req, res, next) => {
+const checkUserKey = (database, req, res, next) => {
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
   console.log("req.body : " + JSON.stringify(req.body) );
   console.log("---------------------------------");
   if(req.body.user_key !== undefined){
-    //connectDB();
     if(database){
       authUser(database, req, function (err, docs) {
         if(err) throw err;
@@ -76,7 +60,10 @@ const checkUserKey = (req, res, next) => {
   }
 
 };
-
+*/
+const checkUserKey = (req, res, next) => {
+  next();
+}
 router.get('/keyboard', (req, res) => {
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
@@ -112,12 +99,26 @@ router.post('/message', checkUserKey, (req, res) => {
   });
 });
 */
-router.post('/message', checkUserKey, (req, res) => {
+//router.post('/message', checkUserKey, (req, res) => {
+router.post('/message', Database.database, (req, res) => {
   const _obj = {
     user_key: req.body.user_key,
     type: req.body.type,
     content: req.body.content
   };
+
+  // 사용자 정보 조회 결과
+  var userInfo;
+  if(res.docs.length == 0 ){  //신규고객(user_key DB 미보유)
+
+  }else{
+    userInfo = {
+      _id: res.docs[0]._id,
+      user_key: res.docs[0].user_key,
+      phone_num: res.docs[0].phone_num,
+      policy_agree: res.docs[0].policy_agree
+    }
+  }
 
   if(_obj.type == 'text'){
 
@@ -134,7 +135,6 @@ router.post('/message', checkUserKey, (req, res) => {
         }
       });
     }else{ //depth 2: 사용자 입력 text인 경우
-
       if(_obj.content == "메뉴"){
         console.log("bot.js 22 :: ",_obj.content == "메뉴");
         Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
@@ -148,12 +148,6 @@ router.post('/message', checkUserKey, (req, res) => {
             }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
           }
         });
-      }else if(_obj.contetn == "고객 상담 서비스 만족도 평가"){
-
-
-      }else if(_obj.contetn == "고객 설문조사"){
-
-
       }else{
           PolicyAgree.policyAgreeKeyboard(req, _obj.content, (err, result) => {
           if(!err) {
@@ -168,8 +162,6 @@ router.post('/message', checkUserKey, (req, res) => {
         });
       }
     }
-
-
   }else{
     //type : photo
   }
