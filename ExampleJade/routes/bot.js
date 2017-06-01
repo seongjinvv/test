@@ -8,7 +8,6 @@ const PolicyAgree = require('../service/policyAgreeService');
 //console.log("req.url :" + req.url);
 //console.log("req.body : " + JSON.stringify(req.body) );
 // ===================================================== 디버깅용 코드
-
 // mongoDB 설정
 var MongoClient = require('mongoDB').MongoClient;
 var database;
@@ -24,6 +23,9 @@ function connectDB() {
 }
 // db연결
 connectDB();
+
+module.exports = database;
+
 
 // 사용자 인증 함수
 var authUser = function(database, req, callback){
@@ -132,17 +134,39 @@ router.post('/message', checkUserKey, (req, res) => {
         }
       });
     }else{ //depth 2: 사용자 입력 text인 경우
-      PolicyAgree.policyAgreeKeyboard(req, _obj.content, (err, result) => {
-        if(!err) {
-          res.set({
-            'content-type': 'application/json'
-          }).send(JSON.stringify(result));
-        }else{
-          res.set({
-            'content-type': 'application/json'
-          }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
-        }
-      });
+
+      if(_obj.content == "메뉴"){
+        console.log("bot.js 22 :: ",_obj.content == "메뉴");
+        Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
+          if(!err) {
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(result));
+          }else{
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+          }
+        });
+      }else if(_obj.contetn == "고객 상담 서비스 만족도 평가"){
+
+
+      }else if(_obj.contetn == "고객 설문조사"){
+
+
+      }else{
+          PolicyAgree.policyAgreeKeyboard(req, _obj.content, (err, result) => {
+          if(!err) {
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(result));
+          }else{
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+          }
+        });
+      }
     }
 
 

@@ -11,6 +11,9 @@ PolicyAgree.policyAgreeKeyboard = (req, content, callback) => {
   var regExp = /^01([0|1|6|7|8|9]?)?([0-9]{3,4})?([0-9]{4})$/;
 
   switch (content) {
+    case "메뉴":
+      callback(null, message.messageButtonTypePolicyAgree(getPolicyAgreeMsg2(), '약관 상세 보기(Link)', 'http://google.com'));
+    break;
     case "00":
       callback(null, message.messageButtonTypePolicyAgree(getPolicyAgreeMsg2(), '약관 상세 보기(Link)', 'http://google.com'));
     break;
@@ -36,10 +39,12 @@ PolicyAgree.policyAgreeKeyboard = (req, content, callback) => {
 var getPolicyAgreeMsg1 = function(){
   let testResult;
 
-  testResult = "이벤트 참여 절차 : 개인정보 입력(오케이) → 서비스 약관 동의(진행중) → 개인정보 수집 동의\r\n\r\n";
-  testResult += "--------------\r\n\r\n";
-  testResult += '이벤트 참여를 위하여 휴대폰 번호 입력이 완료되었습니다.';
-  testResult += '서비스 이용 약관을 확인하시고 약관에 동의하시면 채팅창에 00번 또는 동의 라고 입력해주세요.\r\n\r\n\r\n';
+  testResult = "(축하)이벤트 참여 절차 : \r\n";
+  testResult += "    1.개인정보 입력(오케이)\r\n";
+  testResult += "    2.서비스 약관 동의\r\n";
+  testResult += "    3.개인정보 수집 동의\r\n\r\n";
+  testResult += '이벤트 참여를 위하여 휴대폰 번호 입력이 완료되었습니다.\r\n';
+  testResult += '서비스 이용 약관을 확인하시고 약관에 동의하시면 채팅창에 00번 또는 동의 라고 입력해주세요.\r\n\r\n';
   testResult += '00.동의';
 
   return testResult;
@@ -49,10 +54,12 @@ var getPolicyAgreeMsg1 = function(){
 var getPolicyAgreeMsg2 = function(){
   let testResult;
 
-  testResult = "이벤트 참여 절차 : 개인정보 입력(오케이) → 서비스 약관 동의(오케이) → 개인정보 수집 동의(진행중)\r\n\r\n";
-  testResult += "--------------\r\n\r\n";
-  testResult += '서비스 약관 동의가 완료되었습니다.';
-  testResult += '개인정보 수집 이용 약관을 확인하시고 약관에 동의하시면 동의 버튼을 눌러주세요.\r\n\r\n\r\n';
+  testResult = "(축하)이벤트 참여 절차 : \r\n";
+  testResult += "    1.개인정보 입력(오케이)\r\n";
+  testResult += "    2.서비스 약관 동의(오케이)\r\n";
+  testResult += "    3.개인정보 수집 동의\r\n\r\n";
+  testResult += '서비스 약관 동의가 완료되었습니다.(뿌듯)\r\n';
+  testResult += '개인정보 수집 이용 약관을 확인하시고 약관에 동의하시면 동의 버튼을 눌러주세요.\r\n';
 
   return testResult;
 };
@@ -61,12 +68,12 @@ var getPolicyAgreeMsg2 = function(){
 var getPolicyAgreeEndMsg = function(){
   let testResult;
 
-  testResult = "이벤트 참여 절차 : 개인정보 입력(오케이) → 서비스 약관 동의(오케이) → 개인정보 수집 동의(오케이)\r\n\r\n";
-  testResult += "--------------\r\n\r\n";
-  testResult += "이벤트 참여가 완료되었습니다. ";
-  testResult += "감사합니다.(꺄아)\r\n\r\n\r\n";
-  testResult += "당첨 결과 발표일 : 2017-06-30\r\n";
-  testResult += "--------------\r\n\r\n";
+  testResult = "(축하)이벤트 참여 절차 : \r\n";
+  testResult += "    1.개인정보 입력(오케이)\r\n";
+  testResult += "    2.서비스 약관 동의(오케이)\r\n";
+  testResult += "    3.개인정보 수집 동의(오케이)\r\n\r\n";
+  testResult += "이벤트 참여가 완료되었습니다. 감사합니다.(꺄아)\r\n\r\n";
+  testResult += "당첨 결과 발표일 : 2017-06-30\r\n\r\n";
   testResult += "초기 화면으로 돌아갑니다.";
 
   return testResult;

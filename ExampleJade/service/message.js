@@ -1,6 +1,6 @@
 let message = {};
 
-message.buttons = ['카카오톡 수신 동의 이벤트 참여하기', '고객 상담 서비스 만족도 평가', '고양이'];
+message.buttons = ['알림톡 수신동의하고 선물받기', '고객 상담 서비스 만족도 평가', '고객 설문조사'];
 message.buttonsPolicyAgree = ['개인정보 수집에 동의합니다.'];
 message.buttonsResearch = ['매우 만족', '보통 만족', '불만족'];
 
