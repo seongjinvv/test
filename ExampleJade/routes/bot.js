@@ -9,17 +9,70 @@ const PolicyAgree = require('../service/policyAgreeService');
 //console.log("req.body : " + JSON.stringify(req.body) );
 // ===================================================== 디버깅용 코드
 
+// mongoDB 설정
+var MongoClient = require('mongoDB').MongoClient;
+var database;
+function connectDB() {
+  //database 연결 정보
+  var databaseUrl = 'mongodb://localhost:27017/local';
+  //database 연결
+  MongoClient.connect(databaseUrl, function(err, db){
+    if (err) throw err;
+    console.log("DB에 연결 되었습니다.");
+    database = db;
+  })
+}
+// db연결
+connectDB();
+
+// 사용자 인증 함수
+var authUser = function(database, req, callback){
+  console.log('authUser 호출 됨');
+
+  //users 컬렉션 참조
+  var users = database.collection('users');
+  users.find({"user_key": req.body.user_key}).toArray(function (err, docs) {
+    if(err){
+      callback(err, null);
+    }
+    if(docs.length > 0){
+      console.log("user_key 일치 사용자 찾음. user_key :", req.body.user_key);
+      //console.log(docs);
+      callback(null, docs);
+    }else{
+      console.log("user_key 일치 사용자 찾지 못함. 신규회원.");
+      callback(null, null);
+    }
+  })
+}
+
 const checkUserKey = (req, res, next) => {
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
   console.log("req.body : " + JSON.stringify(req.body) );
   console.log("---------------------------------");
   if(req.body.user_key !== undefined){
-    next();
+    //connectDB();
+    if(database){
+      authUser(database, req, function (err, docs) {
+        if(err) throw err;
+        if(docs){
+          console.dir(docs);
+          next();
+        }else{
+          console.log("일치 회원 없음. 신규 폰번호 입력 받자.");
+          next();
+        }
+      });
+    }else{
+      console.log('database 연결 실패.');
+      res.status(500).send(req.body);
+    }
   }else{
     //res.status(500).send({ error: 'user_key is undefined' });
     res.status(500).send(req.body);
   }
+
 };
 
 router.get('/keyboard', (req, res) => {
