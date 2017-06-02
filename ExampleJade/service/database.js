@@ -20,7 +20,7 @@ function connectDB() {
 // db연결
 connectDB();
 */
-
+/*
 Database.database = (req, res, next) => {
   var database;
   console.log("Database.database :: 호출 됨  ");
@@ -34,5 +34,5 @@ Database.database = (req, res, next) => {
     User.info(req, res, next);
   })
 };
-
+*/
 module.exports = Database;

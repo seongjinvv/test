@@ -5,6 +5,7 @@ User.info = (req, res, next) => {
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
   console.log("req.body : " + JSON.stringify(req.body) );
+  console.log("req.db :: ", req.db);
   console.log("---------------------------------");
   if(req.body.user_key !== undefined){
     if(req.db){
@@ -16,11 +17,7 @@ User.info = (req, res, next) => {
         if(docs.length > 0){
           console.log("user_key 일치 사용자 찾음. user_key :", req.body.user_key);
           console.log(docs);
-          res.docs = docs;
-          console.log("-------------------------");
-          console.log("res.docs");
-          console.log(res.docs);
-          console.log("-------------------------");
+          req.docs = docs;
           next();
         }else{
           console.log("user_key 일치 사용자 찾지 못함. 신규회원.");
