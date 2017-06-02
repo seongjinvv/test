@@ -5,6 +5,7 @@ const Bot = require('../service/botService');
 const PolicyAgree = require('../service/policyAgreeService');
 const Database = require('../service/database');
 
+
 // ===================================================== 디버깅용 코드
 //console.log("req.url :" + req.url);
 //console.log("req.body : " + JSON.stringify(req.body) );
@@ -65,10 +66,12 @@ const checkUserKey = (req, res, next) => {
   next();
 }
 router.get('/keyboard', (req, res) => {
+  /*
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
   console.log("req.body : " + JSON.stringify(req.body) );
   console.log("---------------------------------");
+  */
   res.set({
     'content-type': 'application/json'
   }).send(JSON.stringify(message.buttonsType()));
@@ -100,7 +103,7 @@ router.post('/message', checkUserKey, (req, res) => {
 });
 */
 //router.post('/message', checkUserKey, (req, res) => {
-router.post('/message', Database.database, (req, res) => {
+router.post('/message', (req, res) => {
   const _obj = {
     user_key: req.body.user_key,
     type: req.body.type,
@@ -108,15 +111,23 @@ router.post('/message', Database.database, (req, res) => {
   };
 
   // 사용자 정보 조회 결과
+  console.log("사용자 정보 조회 결과 :: \r\n", req.docs);
   var userInfo;
-  if(res.docs.length == 0 ){  //신규고객(user_key DB 미보유)
-
+  if(!res.docs){  //신규고객(user_key DB 미보유)
+    userInfo = {
+      //_id: req.docs[0]._id,
+      user_key: req.body.user_key,
+      phone_num: "",
+      service_conditions_agree: "N",
+      personal_info_conditions_agree: "N"
+    }
   }else{
     userInfo = {
-      _id: res.docs[0]._id,
-      user_key: res.docs[0].user_key,
-      phone_num: res.docs[0].phone_num,
-      policy_agree: res.docs[0].policy_agree
+      _id: req.docs.userInfo._id,
+      user_key: req.docs.userInfo.user_key,
+      phone_num: req.docs.userInfo.phone_num,
+      service_conditions_agree: req.docs.userInfo.service_conditions_agree,
+      personal_info_conditions_agree: req.docs.userInfo.personal_info_conditions_agree
     }
   }
 
