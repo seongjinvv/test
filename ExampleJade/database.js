@@ -17,7 +17,14 @@ db.once('open', function callback () {
 var userSchema = new mongoose.Schema({
   user_key: String,
   phone_num: String,
-  allim_yn: String,
+  allim: {
+    phone_num: String,
+    allim_yn: String
+  },
+  research: {
+    phone_num: String,
+    research_yn: String
+  },
   meta: {
     before_content: String
   }
@@ -57,7 +64,8 @@ UserKey.saveUserKey = (req, callback) => {
   //console.log("req :: \r\n", req.body);
   var newUser = new User({'user_key': req.body.user_key,
                           'phone_num': null,
-                          'allim_yn':'N',
+                          'allim':{'phone_num': null, 'allim_yn':'N'},
+                          'research':{'phone_num': null, 'research_yn':'N'},
                           'meta': {'before_content': req.body.content} //이전 단계 값 저장
                         });
   console.log("save data :: ", newUser);
@@ -75,7 +83,10 @@ UserKey.saveUserKey = (req, callback) => {
 
 UserKey.updateMeta = (req, callback) => {
   console.log("[method] Database.UserKey.updateMeta");
-
+  var _before_contet = "";
+  if(req.body.content){
+    _before_contet = req.body.content;
+  }
   User.findOneAndUpdate({'user_key': req.body.user_key}, {$set:{meta:{'before_content':req.body.content}}}, function(err, doc){
     if(err){
       console.log("[ERROR] Database.UserKey.updateMeta find:: ", err);
@@ -87,6 +98,7 @@ UserKey.updateMeta = (req, callback) => {
     }
   });
 };
+
 UserKey.updatePhoneNum = (req, callback) => {
   console.log("[method] Database.UserKey.updatePhoneNum");
   User.findOneAndUpdate({'user_key': req.body.user_key}, {$set:{'phone_num':req.body.content}}, function(err, doc){
@@ -107,7 +119,7 @@ UserKey.updateAllimYn = (req, callback) => {
   if(req.body.content == "개인정보 수집에 동의합니다."){
     _allim_yn = "Y";
   }
-  User.findOneAndUpdate({'user_key': req.body.user_key}, {$set:{'allim_yn':_allim_yn}}, function(err, doc){
+  User.findOneAndUpdate({'user_key': req.body.user_key}, {$set:{allim:{'phone_num':null, 'allim_yn':_allim_yn}} }, function(err, doc){
     if(err){
       console.log("[ERROR] Database.UserKey.updateAllimYn :: ", err);
       callback(err, req);
