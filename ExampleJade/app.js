@@ -44,7 +44,7 @@ app.use(expressSession({
 // app.use('/users', users);
 
 // mongodb 연결
-
+/*
 app.use(function (req, res, next){
   console.log("미들웨어 추가 테스트");
   if(req.body.user_key == undefined){
@@ -84,7 +84,7 @@ app.use(function (req, res, next){
     });
   }
 });
-
+*/
 app.use('/', bot);
 
 // catch 404 and forward to error handler

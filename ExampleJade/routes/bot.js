@@ -3,8 +3,8 @@ const router = express.Router();
 const message = require('../service/message');
 const Bot = require('../service/botService');
 const PolicyAgree = require('../service/policyAgreeService');
-const Database = require('../service/database');
-
+const Database = require('../database');
+var mongoose = require('mongoose');
 
 // ===================================================== 디버깅용 코드
 //console.log("req.url :" + req.url);
@@ -72,36 +72,12 @@ router.get('/keyboard', (req, res) => {
   console.log("req.body : " + JSON.stringify(req.body) );
   console.log("---------------------------------");
   */
+
   res.set({
     'content-type': 'application/json'
   }).send(JSON.stringify(message.buttonsType()));
 });
 
-
-//TODO : Create Customize Method
-// 메시지 통신
-/*
-router.post('/message', checkUserKey, (req, res) => {
-  const _obj = {
-    user_key: req.body.user_key,
-    type: req.body.type,
-    content: req.body.content
-  };
-  console.log(`user_key : ${_obj.user_key} \r\n content : ${_obj.content}`);
-
-  Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
-    if(!err) {
-      res.set({
-        'content-type': 'application/json'
-      }).send(JSON.stringify(result));
-    }else{
-      res.set({
-        'content-type': 'application/json'
-      }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
-    }
-  });
-});
-*/
 //router.post('/message', checkUserKey, (req, res) => {
 router.post('/message', (req, res) => {
   const _obj = {
@@ -109,30 +85,44 @@ router.post('/message', (req, res) => {
     type: req.body.type,
     content: req.body.content
   };
-
-  // 사용자 정보 조회 결과
-  console.log("사용자 정보 조회 결과 :: \r\n", req.docs);
-  var userInfo;
-  if(!res.docs){  //신규고객(user_key DB 미보유)
-    userInfo = {
-      //_id: req.docs[0]._id,
-      user_key: req.body.user_key,
-      phone_num: "",
-      service_conditions_agree: "N",
-      personal_info_conditions_agree: "N"
-    }
-  }else{
-    userInfo = {
-      _id: req.docs.userInfo._id,
-      user_key: req.docs.userInfo.user_key,
-      phone_num: req.docs.userInfo.phone_num,
-      service_conditions_agree: req.docs.userInfo.service_conditions_agree,
-      personal_info_conditions_agree: req.docs.userInfo.personal_info_conditions_agree
-    }
-  }
+  var user_key = req.body.user_key;
 
   if(_obj.type == 'text'){
-
+    if((message.buttons).indexOf(_obj.content) != -1){
+      Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
+        if(!err) {
+          res.set({
+            'content-type': 'application/json'
+          }).send(JSON.stringify(result));
+        }else{
+          res.set({
+            'content-type': 'application/json'
+          }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+        }
+      });
+    }else{
+      if(_obj.content == "메뉴"){
+        console.log("bot.js 22 :: ",_obj.content == "메뉴");
+        Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
+          if(!err) {
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(result));
+          }else{
+            res.set({
+              'content-type': 'application/json'
+            }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+          }
+        });
+      }else{
+        
+      }
+    }
+  }else{
+    // phoho type
+  }
+  /*
+  if(_obj.type == 'text'){
     if((message.buttons).indexOf(_obj.content) != -1){ //depth 1: keyboard 버튼 입력 message인 경우
       Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
         if(!err) {
@@ -176,7 +166,7 @@ router.post('/message', (req, res) => {
   }else{
     //type : photo
   }
-
+  */
 });
 // 채팅방 개설
 router.post('/friend', checkUserKey, (req, res) => {

@@ -5,24 +5,50 @@ const
   //RedisDAO = require('../service/RedisDAO'),
   message = require('../service/message'),
   Bot = {};
+const Database = require('../database');
+
 
 Bot.chooseBaseKeyboard = (req, content, callback) => {
   console.log("chooseBaseKeyboard >> ", content);
   switch (content) {
-
-    /*
-    case message.buttons[0]:
-      // DB 조회 실행
-      RedisDAO.getByKey(req.cache, RedisDAO.key_diet_normal, (err, result) => {
-        callback(err, message.baseType(JSON.parser(result)));
-      });
-      break;
-    */
     case "메뉴":
       callback(null, message.messageButtonsType('초기 화면으로 돌아갑니다.'));
     break;
     case message.buttons[0]: // 수신동의 시나리오
-      callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+      //msgAlertAgree(req, callback);
+      async.waterfall(
+        [
+          function(callback){
+            Database.UserKey.findUserKey(req, callback);
+          },
+          function(req, callback){
+            console.log("waterfall2 :: " , req.doc);
+            if(req.doc.length == 0){
+              console.log("신규유저");
+              Database.UserKey.saveUserKey(req, callback);
+            }else{
+              Database.UserKey.findUserKey(req, callback);
+            }
+          },
+          function(req, callback){
+            console.log("waterfall3 :: " , req.doc);
+            console.log("수신동의 여부 확인을 위한 유저정보 재조회");
+            Database.UserKey.findUserKey(req, callback);
+          }
+        ],
+        function(err, req){
+          if(err) console.log(err);
+          console.log("최종 req.doc ::", req.doc);
+
+          var _allim_yn = req.doc[0].allim_yn;
+          if(_allim_yn == "Y"){
+            callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+          }else{
+            callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+          }
+        }
+      );
+
     break;
     case message.buttons[1]: // 설문조사 시나리오
       //callback(null, message.baseType(getResearchMsg()));
@@ -39,7 +65,71 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
       break;
   }
 };
+function msgAlertAgree(req, callback){
+  Database.UserKey.findUserKey(req, function(err, result, doc){
+    if(err){
+      cosole.log("[ERROR]Database.UserKey.findUserKey", err);
+    }else{
+      if(result != "success"){ // 신규 user_key 저장
+        console.log("callback :: ", result);
+        //save UserKey
+        Database.UserKey.saveUserKey(req, function(err, result, doc){
+          if(err){
+            cosole.log("[ERROR]Database.UserKey.saveUserKey", err);
+          }else{
+            //console.log("callback ::", doc);
+            //console.log("callback :: ", result);
+            callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+          }
+        });
 
+      }else if(result == "success"){
+        //console.log("callback ::", doc);
+        console.log("알림톡 서비스 동의 여부 : ", doc[0].allim_yn);
+        var _allim_yn = doc[0].allim_yn;
+        if(_allim_yn == "Y"){
+          callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+        }else{
+          callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+        }
+      }else{
+        callback(null, message.messageButtonsType('잘못 된 입력입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+      }
+    }
+  });
+}
+
+function cb_findUserKey(err, result, doc){
+  if(err){
+    cosole.log("[ERROR]Database.UserKey.findUserKey", err);
+  }else{
+    if(result != "success"){ // 신규 user_key 저장
+      console.log("callback :: ", result);
+      //save UserKey
+      Database.UserKey.saveUserKey(req, function(err, result, doc){
+        if(err){
+          cosole.log("[ERROR]Database.UserKey.saveUserKey", err);
+        }else{
+          //console.log("callback ::", doc);
+          //console.log("callback :: ", result);
+          callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+        }
+      });
+
+    }else if(result == "success"){
+      //console.log("callback ::", doc);
+      console.log("알림톡 서비스 동의 여부 : ", doc[0].allim_yn);
+      var _allim_yn = doc[0].allim_yn;
+      if(_allim_yn == "Y"){
+        callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+      }else{
+        callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+      }
+    }else{
+      callback(null, message.messageButtonsType('잘못 된 입력입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+    }
+  }
+}
 var getTestFunction = function(){
   let testResult;
 
