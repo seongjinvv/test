@@ -5,15 +5,13 @@ const
   //RedisDAO = require('../service/RedisDAO'),
   message = require('../service/message'),
   PolicyAgree = {};
+const Database = require('../database');
 
 PolicyAgree.policyAgreeKeyboard = (req, content, callback) => {
   console.log("PolicyAgree.policyAgreeKeyboard : "+ content);
   var regExp = /^01([0|1|6|7|8|9]?)?([0-9]{3,4})?([0-9]{4})$/;
 
   switch (content) {
-    case "메뉴":
-      callback(null, message.messageButtonTypePolicyAgree(getPolicyAgreeMsg2(), '약관 상세 보기(Link)', 'http://google.com'));
-    break;
     case "00":
       callback(null, message.messageButtonTypePolicyAgree(getPolicyAgreeMsg2(), '약관 상세 보기(Link)', 'http://google.com'));
     break;
@@ -21,11 +19,15 @@ PolicyAgree.policyAgreeKeyboard = (req, content, callback) => {
       callback(null, message.messageButtonTypePolicyAgree(getPolicyAgreeMsg2(), '약관 상세 보기(Link)', 'http://google.com'));
     break;
     case "개인정보 수집에 동의합니다.":
-      callback(null, message.messageButtonsType(getPolicyAgreeEndMsg()));
+      Database.UserKey.updateAllimYn(req, callback(null, message.messageButtonsType(getPolicyAgreeEndMsg())) );
+      req.body.content = '메뉴';
+      Database.UserKey.updateMeta(req, null);
+      //callback(null, message.messageButtonsType(getPolicyAgreeEndMsg()));
     break;
     default:
       if(regExp.test(content) && (9 < content.length && content.length < 12)){
-        callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg1(), '약관 상세 보기(Link)', 'http://naver.com'));
+        Database.UserKey.updatePhoneNum(req, callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg1(), '약관 상세 보기(Link)', 'http://naver.com')) );
+        //callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg1(), '약관 상세 보기(Link)', 'http://naver.com'));
 
       }else{
         callback(null, message.baseType('올바른 입력값이 아닙니다.'));

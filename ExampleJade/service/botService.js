@@ -12,7 +12,10 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
   console.log("chooseBaseKeyboard >> ", content);
   switch (content) {
     case "메뉴":
-      callback(null, message.messageButtonsType('초기 화면으로 돌아갑니다.'));
+      Database.UserKey.updateMeta(req, callback(null, message.messageButtonsType('초기 화면으로 돌아갑니다.')));
+      //callback(null, message.messageButtonsType('초기 화면으로 돌아갑니다.'));
+      //before_content 초기화
+
     break;
     case message.buttons[0]: // 수신동의 시나리오
       //msgAlertAgree(req, callback);
@@ -22,8 +25,8 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
             Database.UserKey.findUserKey(req, callback);
           },
           function(req, callback){
-            console.log("waterfall2 :: " , req.doc);
-            if(req.doc.length == 0){
+            //console.log("waterfall2 :: " , req.doc);
+            if(req.doc == null){
               console.log("신규유저");
               Database.UserKey.saveUserKey(req, callback);
             }else{
@@ -31,7 +34,7 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
             }
           },
           function(req, callback){
-            console.log("waterfall3 :: " , req.doc);
+            //console.log("waterfall3 :: " , req.doc);
             console.log("수신동의 여부 확인을 위한 유저정보 재조회");
             Database.UserKey.findUserKey(req, callback);
           }
@@ -40,11 +43,14 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
           if(err) console.log(err);
           console.log("최종 req.doc ::", req.doc);
 
-          var _allim_yn = req.doc[0].allim_yn;
+          var _allim_yn = req.doc.allim_yn;
           if(_allim_yn == "Y"){
-            callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+            req.body.content = '메뉴';
+            Database.UserKey.updateMeta(req, callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.')) );
+            //callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
           }else{
-            callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
+            Database.UserKey.updateMeta(req, callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', '')) );
+            //callback(null, message.baseTypePolicyAgree(getPolicyAgreeMsg(), '', ''));
           }
         }
       );

@@ -78,6 +78,18 @@ router.get('/keyboard', (req, res) => {
   }).send(JSON.stringify(message.buttonsType()));
 });
 
+function cb_chooseBaseKeyboard(err, ersult){
+  if(!err) {
+    res.set({
+      'content-type': 'application/json'
+    }).send(JSON.stringify(result));
+  }else{
+    res.set({
+      'content-type': 'application/json'
+    }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+  }
+}
+
 //router.post('/message', checkUserKey, (req, res) => {
 router.post('/message', (req, res) => {
   const _obj = {
@@ -102,7 +114,6 @@ router.post('/message', (req, res) => {
       });
     }else{
       if(_obj.content == "메뉴"){
-        console.log("bot.js 22 :: ",_obj.content == "메뉴");
         Bot.chooseBaseKeyboard(req, _obj.content, (err, result) => {
           if(!err) {
             res.set({
@@ -115,7 +126,35 @@ router.post('/message', (req, res) => {
           }
         });
       }else{
-        
+        console.log("find meta");
+        Database.UserKey.findUserKey(req, (err, result) => {
+          //console.log("find meta req.doc :: \r\n", result.doc);
+
+          console.log("req.doc.meta.before_content :: ", req.doc.meta.before_content);
+          var _before_contet = req.doc.meta.before_content;
+          // 알림톡 수신동의하고 선물받기
+          if(message.buttons[0] == _before_contet){
+            PolicyAgree.policyAgreeKeyboard(req, _obj.content, (err, result) => {
+              if(!err) {
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(result));
+              }else{
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+              }
+            });
+          }
+          // 고객 상담 서비스 만족도 평가
+          else if(message.buttons[1] == _before_contet){
+
+          }
+          // 고객 설문조사
+          else if(message.buttons[2] == _before_contet){
+
+          }
+        });
       }
     }
   }else{
