@@ -5,6 +5,7 @@ const Bot = require('../service/botService');
 const Database = require('../database');
 var mongoose = require('mongoose');
 const Allim = require('../service/allimService');
+const Research = require('../service/researchService');
 // ===================================================== 디버깅용 코드
 //console.log("req.url :" + req.url);
 //console.log("req.body : " + JSON.stringify(req.body) );
@@ -100,6 +101,17 @@ router.post('/message', (req, res) => {
           }
           // 고객 설문조사
           else if(message.buttons[2] == _before_contet){
+            Research.researchEventkeyboard(req, _obj.contetn, (err, result) => {
+              if(!err) {
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(result));
+              }else{
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+              }
+            });
 
           }
         });

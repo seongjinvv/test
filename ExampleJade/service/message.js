@@ -2,7 +2,7 @@ let message = {};
 
 message.buttons = ['알림톡 수신동의하고 선물받기', '고객 상담 서비스 만족도 평가', '고객 설문조사'];
 message.buttonsPolicyAgree = ['개인정보 수집에 동의합니다.'];
-message.buttonsResearch = ['매우 만족', '보통 만족', '불만족'];
+message.buttonsResearch = ['유럽 여행', '미주권 여행', '아시아 여행'];
 
 message.buttonsType = () => { //최초 진입 시 keyboard 호출 return
   return {
@@ -29,8 +29,8 @@ message.photoType = (text, url_photo, label, url_button) => {
       text: text,
       photo: {
         url: url_photo,
-        width: 640,
-        height:480
+        width: 720,
+        height:630
       },
       message_button: {
         label: label,
@@ -105,5 +105,15 @@ message.messageButtonTypePolicyAgree = (text, label, url_button) => {
     }
 };
 
-
+message.messageCustomButtonsType = (text, btn) => {
+  return {
+    message: {
+      text: text
+    },
+    keyboard: {
+      type: 'buttons',
+      buttons: btn
+    }
+  }
+};
 module.exports = message;

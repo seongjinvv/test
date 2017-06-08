@@ -31,7 +31,7 @@ module.exports.checkAllimYn = function(req, callback){
         console.log(err)
       };
       var _allim_yn = req.doc.allim.allim_yn;
-      if(_allim_yn == "Y"){
+      if("Y" == _allim_yn){
         req.body.content = '메뉴';
         Database.UserKey.updateMeta(req, callback(null, message.messageButtonsType('이미 참가 하였습니다. (부끄)\r\n초기 화면으로 돌아갑니다.')) );
       }else{

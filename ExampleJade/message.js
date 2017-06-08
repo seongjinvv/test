@@ -9,12 +9,21 @@ const msg_allim = {
   event_body_3: "서비스 약관 동의가 완료되었습니다.(뿌듯)\r\n 개인정보 수집 이용 약관을 확인하시고 약관에 동의하시면 동의 버튼을 눌러주세요.\r\n",
   event_body_4: "이벤트 참여가 완료되었습니다. 감사합니다.(꺄아)\r\n\r\n당첨 결과 발표일 : 2017-06-30\r\n\r\n",
 }
+const msg_research = {
+  event_header: "(해)[이벤트]고객 설문 조사(해)",
+  event_content1: "즐겨 드시는 음료에 투표하고 기프티콘 받아가세요!!",
+  event_content2: "아래 설문조사 참여하기 버튼을 누르시고 이벤트 페이지로 이동 후 참여 가능 합니다.",
+  url_photo: "http://scontent-ams3-1.cdninstagram.com/t51.2885-15/e35/18646334_1535559666496847_352078814513201152_n.jpg?ig_cache_key=MTUyMzAyODIxNjEzMzEwODg2Ng%3D%3D.2&se=7",
+  button_label: "설문조사 참여하기",
+  url_button: "http://naver.com"
+}
 const msg_common = {
   enter: "\r\n",
   double_enter: "\r\n\r\n",
   error: "올바른 입력값이 아닙니다.",
   serviceReady: "준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.",
   moveToMain: "초기 화면으로 돌아갑니다.",
+  navi_moveToMain: '초기 화면으로 이동은 "메뉴"를 입력해주세요.\r\n\r\n ',
   guide_text:{
     agree: "00.동의",
     back: "01.뒤로"
@@ -60,4 +69,24 @@ module.exports.getMsgAllim = function(before_content, level){
     msg += msg_common.error;
   }
   return msg;
+}
+module.exports.getMsgResearch = function(before_content, level){
+  var msg = "";
+  if("고객 설문조사" == before_content){
+    if("1" == level){
+      msg += msg_research.event_header + msg_common.double_enter;
+      msg += msg_research.event_content1 + msg_common.enter;
+      msg += msg_research.event_content2;
+    }
+  }
+  return msg;
+}
+module.exports.getUrlPhotoResearch = function(){
+  return msg_research.url_photo;
+}
+module.exports.getButtonLabelResearch = function(){
+  return msg_research.button_label;
+}
+module.exports.getUrlButtonResearch = function(){
+  return msg_research.url_button;
 }

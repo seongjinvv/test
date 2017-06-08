@@ -23,7 +23,9 @@ var userSchema = new mongoose.Schema({
   },
   research: {
     phone_num: String,
-    research_yn: String
+    research_yn: String,
+		answer1: String,
+		answer2: String
   },
   meta: {
     before_content: String
@@ -65,7 +67,7 @@ UserKey.saveUserKey = (req, callback) => {
   var newUser = new User({'user_key': req.body.user_key,
                           'phone_num': null,
                           'allim':{'phone_num': null, 'allim_yn':'N'},
-                          'research':{'phone_num': null, 'research_yn':'N'},
+                          'research':{'phone_num': null, 'research_yn':'N', 'answer1': null, 'answer2': null},
                           'meta': {'before_content': req.body.content} //이전 단계 값 저장
                         });
   console.log("save data :: ", newUser);

@@ -21,15 +21,15 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
     case message.buttons[0]: // 수신동의 시나리오
       Allim.checkAllimYn(req, callback);
     break;
-    case message.buttons[1]: // 설문조사 시나리오
-      //callback(null, message.baseType(getResearchMsg()));
+    case message.buttons[1]:
       callback(null, message.messageButtonsType('준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
     break;
-    case message.buttons[2]:
+    case message.buttons[2]:// 설문조사 시나리오
       /*
       callback(null, message.messageButtonType(content + "너만 없어.", "ㅋㅋㅋ", 'https://www.google.co.kr/search?q=%EB%82%98%EB%A7%8C+%EC%97%86%EC%96%B4+%EA%B3%A0%EC%96%91%EC%9D%B4&safe=off&tbm=isch&imgil=et6IC7bU5mOjYM%253A%253Bg83dwEjClcGCDM%253Bhttp%25253A%25252F%25252Fblog.naver.com%25252FPostView.nhn%25253FblogId%2525253Dhapmeab651%25252526logNo%2525253D220876346062&source=iu&pf=m&fir=et6IC7bU5mOjYM%253A%252Cg83dwEjClcGCDM%252C_&usg=__ljbP_MYOohl1tB9Y8ZTeHytKAKQ%3D&biw=1344&bih=751&dpr=1.25&ved=0ahUKEwi9jZ_fuZTUAhWMF5QKHQRkDLUQyjcINQ&ei=bbwrWf2iBoyv0ASEyLGoCw#imgrc=et6IC7bU5mOjYM:'));
       */
-      callback(null, message.messageButtonsType('준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+      Research.checkResearchYn(req, callback);
+      //callback(null, message.messageButtonsType('준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
     break;
     default:
       callback(null, message.baseType('올바른 입력값이 아닙니다.'));
