@@ -1,7 +1,10 @@
 // get mongoose package
 var mongoose = require('mongoose');
 // connect to mongoDB
-mongoose.connect('mongodb://localhost:27017/local?maxPoolSize=10');
+//local DB
+//mongoose.connect('mongodb://localhost:27017/local?maxPoolSize=10');
+//server DB
+mongoose.connect('mongodb://localhost:24790/local?maxPoolSize=10');
 
 var db = mongoose.connection;
 
