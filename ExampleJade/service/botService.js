@@ -8,6 +8,7 @@ const
 const Database = require('../database');
 const Allim = require('./allimService');
 const Research = require('./researchService');
+const Survey = require('./satisfactionSurveyService');
 
 
 Bot.chooseBaseKeyboard = (req, content, callback) => {
@@ -22,7 +23,8 @@ Bot.chooseBaseKeyboard = (req, content, callback) => {
       Allim.checkAllimYn(req, callback);
     break;
     case message.buttons[1]:
-      callback(null, message.messageButtonsType('준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+      //callback(null, message.messageButtonsType('준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.'));
+      Survey.checkSurvey(req, callback);
     break;
     case message.buttons[2]:// 설문조사 시나리오
       /*

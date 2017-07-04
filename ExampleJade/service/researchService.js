@@ -41,6 +41,3 @@ module.exports.checkResearchYn = function(req, callback){
     }
   )
 }
-module.exports.researchEventkeyboard = (req, content, callback) => {
-  console.log("researchService.researchEventkeyboard : "+ content);
-}

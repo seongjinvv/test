@@ -6,6 +6,7 @@ const Database = require('../database');
 var mongoose = require('mongoose');
 const Allim = require('../service/allimService');
 const Research = require('../service/researchService');
+const Survey = require('../service/satisfactionSurveyService');
 // ===================================================== 디버깅용 코드
 //console.log("req.url :" + req.url);
 //console.log("req.body : " + JSON.stringify(req.body) );
@@ -15,12 +16,12 @@ const checkUserKey = (req, res, next) => {
   next();
 }
 router.get('/keyboard', (req, res) => {
-  /*
+
   console.log("---------------------------------");
   console.log("req.url :" + req.url);
   console.log("req.body : " + JSON.stringify(req.body) );
   console.log("---------------------------------");
-  */
+
 
   res.set({
     'content-type': 'application/json'
@@ -97,7 +98,17 @@ router.post('/message', (req, res) => {
           }
           // 고객 상담 서비스 만족도 평가
           else if(message.buttons[1] == _before_contet){
-
+            Survey.surveyKeyboard(req, _obj.content, (err, result) => {
+              if(!err) {
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(result));
+              }else{
+                res.set({
+                  'content-type': 'application/json'
+                }).send(JSON.stringify(message.baseType('다시 시도해 주세요.')));
+              }
+            });
           }
           // 고객 설문조사
           else if(message.buttons[2] == _before_contet){

@@ -2,7 +2,6 @@ let message = {};
 
 message.buttons = ['알림톡 수신동의하고 선물받기', '고객 상담 서비스 만족도 평가', '고객 설문조사'];
 message.buttonsPolicyAgree = ['개인정보 수집에 동의합니다.'];
-message.buttonsResearch = ['유럽 여행', '미주권 여행', '아시아 여행'];
 
 message.buttonsType = () => { //최초 진입 시 keyboard 호출 return
   return {

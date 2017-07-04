@@ -15,15 +15,25 @@ const msg_research = {
   event_content2: "아래 설문조사 참여하기 버튼을 누르시고 이벤트 페이지로 이동 후 참여 가능 합니다.",
   url_photo: "http://scontent-ams3-1.cdninstagram.com/t51.2885-15/e35/18646334_1535559666496847_352078814513201152_n.jpg?ig_cache_key=MTUyMzAyODIxNjEzMzEwODg2Ng%3D%3D.2&se=7",
   button_label: "설문조사 참여하기",
-  url_button: "http://naver.com"
+  url_button: "https://drive.google.com/open?id=1kLdibIv7HFNnlE1WjnIpZbf66QJOaKUFadFUEObil3A"
 }
+const msg_survey = {
+  header: "(콜) 고객센터 만족도 평가 (굿)",
+  content: "고객센터 상담에 대한 만족도를 수집 중입니다. 고객님들의 평가는 서비스 개선에 소중한 자료가 되오니 평가 부탁 드립니다(발그레)",
+  answer1: "  1. 매우 만족 (방긋)",
+  answer2: "  2. 보통 만족 (미소)",
+  answer3: "  3. 불만족 (근심)",
+  guide_text: "(숫자로 입력 해 주세요.)",
+  result: "을 선택하셨습니다.\r\n 응답 해 주셔서 감사합니다.(뽀뽀)"
+}
+
 const msg_common = {
   enter: "\r\n",
   double_enter: "\r\n\r\n",
   error: "올바른 입력값이 아닙니다.",
   serviceReady: "준비 중입니다. (부끄)\r\n초기 화면으로 돌아갑니다.",
   moveToMain: "초기 화면으로 돌아갑니다.",
-  navi_moveToMain: '초기 화면으로 이동은 "메뉴"를 입력해주세요.\r\n\r\n ',
+  navi_moveToMain: '초기 화면으로 이동은 "메뉴"를 입력해주세요.',
   guide_text:{
     agree: "00.동의",
     back: "01.뒤로"
@@ -33,7 +43,9 @@ const emoticons = {
   okay: "(오케이)",
   good: "(굿)"
 }
-
+module.exports.getErrorMsg = function(){
+  return msg_common.error + msg_common.enter + msg_common.navi_moveToMain;
+};
 module.exports.getMsgAllim = function(before_content, level){
   var msg = "";
   if("알림톡 수신동의하고 선물받기" == before_content){
@@ -89,4 +101,21 @@ module.exports.getButtonLabelResearch = function(){
 }
 module.exports.getUrlButtonResearch = function(){
   return msg_research.url_button;
+}
+
+module.exports.getMsgSurvey = function(){
+  var msg = "";
+  msg += msg_survey.header + msg_common.double_enter;
+  msg += msg_survey.content + msg_common.double_enter;
+  msg += msg_survey.answer1 + msg_common.enter;
+  msg += msg_survey.answer2 + msg_common.enter;
+  msg += msg_survey.answer3 + msg_common.double_enter;
+  msg += msg_survey.guide_text;
+  return msg;
+};
+
+module.exports.getMsgSurveyResult = function(content){
+  var msg = '[' + content + '] ' + msg_survey.result + msg_common.double_enter;
+  msg += msg_common.moveToMain;
+  return msg;
 }
